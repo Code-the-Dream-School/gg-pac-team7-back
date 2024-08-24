@@ -1,30 +1,100 @@
-# Back-End Repo for Node/React Practicum
+# Project Overview:
 
-This will be the API for the front-end React app part of your practicum project.
+    1. Project Overview
+    2. Technology Stack
+    3. API Routes
+    4. Database Schema
+    5. Setup Instructions
+    6. Running the Server
 
-These instructions are for the **front-end team** so they can setup their local development environment to run 
-both the back-end server and their front-end app. You can go through these steps during your first group meeting 
-in case you need assistance from your mentors.
+### Project Overview
 
->The back-end server will be running on port 8000. The front-end app will be running on port 3000. You will need to run both the back-end server and the front-end app at the same time to test your app.
+    Name: Node/React Practicum Back-End
+    Description: This is the back-end server for a practicum project using Node.js and Express to create a RESTful API. The server communicates with a MongoDB database and provides endpoints for the front-end React application.
 
-### Setting up local development environment
+#### Technology Stack
 
-1. Create a folder to contain both the front-end and back-end repos 
-2. Clone this repository to that folder
-3. Run `npm install` to install dependencies
-4. Pull the latest version of the `main` branch (when needed)
-5. Run `npm run dev` to start the development server
-6. Open http://localhost:8000/api/v1/ with your browser to test.
-7. Your back-end server is now running. You can now run the front-end app.
+    ~ Node.js: JavaScript runtime environment
+    ~ Express: Node.js web application framework for building RESTful APIs
+    ~ MongoDB: NoSQL database used for storing data
+    ~ Mongoose: Object Data Modeling (ODM) library for MongoDB and Node.js
+    ~ Dotenv: Module to load environment variables from a .env file
+    ~ Nodemon: Tool for automatically restarting the server during development
+    ~ JWT: JSON Web Tokens for authentication
+    ~ Bcrypt: Library for hashing passwords
+    ~ Cors: Middleware for enabling Cross-Origin Resource Sharing
+    ~ Morgan: HTTP request logger middleware
+    ~ Body-Parser: Middleware for parsing incoming request bodies
 
-#### Running the back-end server in Visual Studio Code
+#### API Routes
 
-Note: In the below example, the group's front-end repository was named `bb-practicum-team1-front` and the back-end repository was named `bb-practicum-team-1-back`. Your repository will have a different name, but the rest should look the same.
-![vsc running](images/back-end-running-vsc.png)
+~~ Authentication Routes (/api/v1/auth)
+| Route | HTTP Method | Description |
+|-------------|-------------|-----------------------------------------------|
+| `/register` | POST | Register a new user |
+| `/login` | POST | Authenticate user and return a JWT |
+| `/me` | GET | Check current user based on token |
 
-#### Testing the back-end server API in the browser
+~~ Bookmark Routes (/api/v1/bookmarks)
+| Route | HTTP Method | Description |
+|--------|-------------|----------------------------------------------|
+| `/` | GET | Get all bookmarks for the authenticated user |
+| `/:id` | GET | Get a bookmark by ID |
+| `/` | POST | Create a new bookmark |
+| `/:id` | DELETE | Delete a bookmark by ID |
 
-![browser server](images/back-end-running-browser.png)
+~~ Event Routes (/api/v1/events)
+| Route | HTTP Method | Description |
+|--------|-------------|-----------------------|
+| `/` | GET | Get all events |
+| `/:id` | GET | Get event details by ID |
+| `/` | POST | Create a new event |
+| `/:id` | PUT | Update an event by ID |
+| `/:id` | DELETE | Delete an event by ID |
 
->Update the .node-version file to match the version of Node.js the **team** is using. This is used by Render.com to [deploy the app](https://render.com/docs/node-version).
+~~Search Routes (/api/v1/search)
+
+| Route | HTTP Method | Description      |
+| ----- | ----------- | ---------------- |
+| `/`   | GET         | Search for items |
+
+#### Database Schema
+
+{
+"\_id": "ObjectId",
+"firstName": "String",
+"lastName": "String",
+"email": "String",
+"password": "String",
+"createdAt": "Date",
+"updatedAt": "Date"
+}
+
+#### Setup Instructions
+
+    1. Create a Folder: Create a folder to contain both the front-end and back-end repositories.
+
+    2. Clone the Repository: Clone this repository into your newly created folder.
+                git clone <repository-url>
+
+    3. Install Dependencies: Navigate to the project directory and run the following command to install all necessary dependencies.
+
+                npm install
+
+    4. Environment Variables: Create a .env file in the root directory and add the following environment variables:
+
+        GOOGLE_MAPS_API_KEY=<GoogleApiKey>
+        MONGO_URI=mongodb+srv://<username>:<password>@<cluster-url>/practicum
+        JWT_SECRET=<your_jwt_secret>
+        JWT_EXPIRES=1d
+        PORT=8000
+
+        Replace <username>, <password>, <cluster-url>, <GoogleApiKey> and <your_jwt_secret> with your actual MongoDB credentials and JWT secret.
+
+    5. Pull the Latest Version: Always ensure you are on the latest version of the main branch.
+
+                git pull origin main
+
+#### Running the Server
+
+                npm run dev

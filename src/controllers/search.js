@@ -1,5 +1,5 @@
 // controllers/search.js
-const { getCoordinates, getPlacesNearby } = require("../utils/googleMaps");
+const { getCoordinates, getPlacesNearby } = require("../../googleMaps");
 const { StatusCodes } = require("http-status-codes");
 
 const searchEngine = async (req, res) => {
