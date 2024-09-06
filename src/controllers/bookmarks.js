@@ -10,7 +10,7 @@ async function getAllBookmarks(req, res) {
     console.error("Error fetching bookmarks:", error.message)
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "Failed to fetch bookmarks" })
+      .json([{ msg: "Failed to fetch bookmarks" }])
   }
 }
 
@@ -26,7 +26,13 @@ const getBookmark = async (req, res) => {
     if (!bookmark) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ msg: "Bookmark not found" })
+        .json([{ 
+          type: "field",
+          value: `${id}`,
+          msg: "Bookmark not found!",
+          path: "id",
+          location: "params"  
+        }])
     }
 
     res.status(StatusCodes.OK).json(bookmark)
@@ -34,7 +40,7 @@ const getBookmark = async (req, res) => {
     console.error("Error fetching bookmark:", error.message)
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "Failed to fetch bookmark" })
+      .json([{ msg: "Failed to fetch bookmark" }])
   }
 }
 
@@ -49,7 +55,7 @@ const createBookmark = async (req, res) => {
     console.error("Error creating bookmark:", error.message)
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "Failed to create bookmark" })
+      .json([{ msg: "Failed to create bookmark" }])
   }
 }
 
@@ -66,15 +72,21 @@ const deleteBookmark = async (req, res) => {
     if (!deletedBookmark) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ msg: "Bookmark not found" })
+        .json([{ 
+            type: "field",
+            value: `${id}`,
+            msg: "Bookmark not found!",
+            path: "id",
+            location: "params"  
+         }])
     }
 
-    res.status(StatusCodes.OK).json({ msg: "Bookmark deleted successfully" })
+    res.status(StatusCodes.OK).json([{ msg: "Bookmark deleted successfully" }])
   } catch (error) {
     console.error("Error deleting bookmark:", error.message)
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "Failed to delete bookmark" })
+      .json([{ msg: "Failed to delete bookmark" }])
   }
 }
 
