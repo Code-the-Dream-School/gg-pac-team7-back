@@ -17,7 +17,7 @@ const getAllEvents = async (req, res) => {
             const events = await Event.find(method).sort(sortMethod)
             res.status(StatusCodes.OK).json(events)
         } catch (error) {
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Failed retrieving events" })
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json([{ msg: "Failed retrieving events" }])
         }
 }
 
@@ -27,13 +27,19 @@ const getEvent = async (req, res) => {
         await Event.findOne({ _id: eventId })
             .then(event => {
                 if (!event) {
-                    return res.status(StatusCodes.NOT_FOUND).json({ msg: "Event not found!" })
+                    return res.status(StatusCodes.NOT_FOUND).json([{ 
+                        type: "field",
+                        value: `${eventId}`,
+                        msg: "Event not found!",
+                        path: "id",
+                        location: "params" 
+                    }])
                 }
                 res.status(StatusCodes.OK).json(event)
             })
        
     } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Failed retrieving event" })
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json([{ msg: "Failed retrieving event" }])
     }
 }
 
@@ -52,18 +58,23 @@ const createEvent = async (req, res) => {
             endDate: req.body.endDate,
             address: req.body.address,
             restrictions: req.body.restrictions,
-            eventImages: req.body.eventImages
-            
+            eventImages: req.body.eventImages      
         })
      
         const event = await Event.create(eventModel)
         res.status(StatusCodes.CREATED).json(event)
     } catch (error) {
-        let errorMsg = "Failed to create event"
         if (error.code == 11000) {
-             errorMsg = "This event is already registered"
+            const errorData = Object.entries(error.keyValue).flat()
+            return res.status(StatusCodes.CONFLICT).json([{
+                type: "field",
+                value: `${errorData[1]}`,
+                msg: `This ${errorData[0]} is already registered`,
+                path: `${errorData[0]}`,
+                location: "body"
+              }]) 
         }
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: errorMsg})
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json([{ msg: "Failed to create event" }])
     }
 }
 
@@ -74,13 +85,13 @@ const deleteEvent = async (req, res) => {
             _id: eventId,
         }).then(done => {
             if (!done) {
-                return res.status(StatusCodes.NOT_FOUND).json({ msg: "Failed deleting event" })
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json([{ msg: "An error occurred while trying to delete" }])
             }
-            res.status(StatusCodes.OK).json({ eventId: eventId, msg: "Successfully deleted" })
+            res.status(StatusCodes.OK).json({ msg: "Successfully deleted" })
         })
        
     } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Failed locating event" })
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json([{ msg: "Failed to delete event" }])
     }
 }
 
@@ -107,7 +118,7 @@ const updateEvent = async (req, res) => {
         
         res.status(StatusCodes.OK).json({ msg: "Event is successfully updated!" })
     } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Failed updating event" })
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json([{ msg: "Failed updating event" }])
     }
 }
 

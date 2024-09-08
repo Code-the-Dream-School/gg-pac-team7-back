@@ -4,9 +4,7 @@ const EventSchema = new mongoose.Schema({
     title: {
         type: String,
         unique: true,
-        required: true,
-        minLength: 10,
-        maxLength: 100,
+        required: true
     },
     startDate: {
         type: Date,
