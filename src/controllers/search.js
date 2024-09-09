@@ -30,10 +30,10 @@ async function searchEngine(req, res) {
       res.status(StatusCodes.OK).json({ places })
   //////////////////////////////////////////////////////////////////////
     } else {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid query parameters" })
+      res.status(StatusCodes.BAD_REQUEST).json([{ msg: "Invalid query parameters" }])
     }
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json([{ msg: "Failed to process data" }, { error: error.message }])
   }
 }
 

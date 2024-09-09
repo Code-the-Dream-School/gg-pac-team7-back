@@ -1,489 +1,1708 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "PRACTICUM",
-      "version": "1.0.0"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "PRACTICUM",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://gg-pac-team7-back.onrender.com"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth"
     },
-    "servers": [
-      {
-        "url": "https://gg-pac-team7-back.onrender.com"
-      }
-    ],
-    "components": {
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer"
-        }
-      }
+    {
+      "name": "Profile"
     },
-    "tags": [
-      {
-        "name": "Auth"
-      },
-      {
-        "name": "Events"
-      },
-      {
-        "name": "Bookmarks"
-      },
-      {
-        "name": "Search (GEO)"
-      }
-    ],
-    "paths": {
-      "/api/v1/auth/register": {
-        "post": {
-          "tags": [
-            "Auth"
-          ],
-          "summary": "Register User",
-          "description": "Register new user request. All fields required, except 'avatarUrl'",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "example": {
-                    "firstName": "Kate",
-                    "lastName": "Connor",
-                    "email": "connor95@mail.com",
-                    "password": "",
-                    "avatarUrl": ""
-  
-                  }
+    {
+      "name": "Events"
+    },
+    {
+      "name": "Bookmarks"
+    },
+    {
+      "name": "Search (GEO)"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register User",
+        "description": "Register new user request. All fields except 'username' are required",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "firstName": "Kate",
+                  "lastName": "Petrova",
+                  "userName": "KatyaP",
+                  "email": "petrova95@mail.com",
+                  "password": ""
                 }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
-              }
-            }
-          }
-        }
-      },
-      "/api/v1/auth/login": {
-        "post": {
-          "tags": [
-            "Auth"
-          ],
-          "summary": "Login User",
-          "description": "User login request. Correct email/password pair is required. Gives JSONWebToken in return",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "example": {
-                    "email": "newman92@mail.com",
-                    "password": ""
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
-              }
-            }
-          }
-        }
-      },
-      "/api/v1/auth/me": {
-        "get": {
-          "tags": [
-            "Auth"
-          ],
-          "summary": "Check User",
-          "description": "Authenticating request. Checks whether user is authed or not",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
-              }
-            }
-          }
-        }
-      },
-      "/api/v1/events": {
-        "get": {
-          "tags": [
-            "Events"
-          ],
-          "summary": "Get All Events",
-          "description": "If successful, returns all the events from DB as an array of objects. Query parameters may apply.",
-          "parameters": [
-            {
-              "name": "category",
-              "in": "query",
-              "schema": {
-                "type": "string"
-              },
-              "example": "food",
-              "description": "Defines the type of event: food, animal, environment, health, social"
-            },
-            {
-              "name": "date",
-              "in": "query",
-              "schema": {
-                "type": "integer"
-              },
-              "example": "1",
-              "description": "Specifies the sorting order by date: '1' - chronological, '-1' - reversed"
-            },
-            {
-              "name": "title",
-              "in": "query",
-              "schema": {
-                "type": "integer"
-              },
-              "example": "-1",
-              "description": "Specifies the sorting order by title: '1' - alphabetical, '-1' - reversed"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
               }
             }
           }
         },
-        "post": {
-          "tags": [
-            "Events"
-          ],
-          "summary": "Create Event",
-          "description": "Event creation request. If passes the validator, will return status 200 and copy of the created object. For authenticated user only. Non-required attributes: endDate, address, restrictions, eventImages",
-          "requestBody": {
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "object",
+                  "example": {
+                    "msg": "New user was successfully registered"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "qwertymail.com",
+                          "msg": "Wrong email format, valid example: youremail@mailservice.com",
+                          "path": "email",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "",
+                          "msg": "Required length is 4 to 30. Use only [A-Z, a-z, 0-9, !?@#$%^&*~_]",
+                          "path": "password",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "qw",
+                          "msg": "Required length is 3 to 20. Use only [A-Z, a-z]",
+                          "path": "firstName",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "er",
+                          "msg": "Required length is 3 to 20. Use only [A-Z, a-z]",
+                          "path": "lastName",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "ty",
+                          "msg": "Required length is 3 to 20. Use only [A-Z, a-z, 0-9]",
+                          "path": "userName",
+                          "location": "body"
+                      }
+                  ]
+                  
+                }           
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "qwerty@mail.com",
+                          "msg": "This email is already registered",
+                          "path": "email",
+                          "location": "body"
+                        },
+                        {
+                          "type": "field",
+                          "value": "SimpleMan",
+                          "msg": "This username is already registered",
+                          "path": "userName",
+                          "location": "body"
+                        }
+                  ]   
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed to register user"
+                  }]
+                }
+              }
+            }
+          }   
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login User",
+        "description": "User login request. Correct email/password pair is required.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "email": "newman92@mail.com",
+                  "password": ""
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                "type": "object",
+                "example": {
+                  "msg": "Successfully logged in"
+                }
+              }
+            }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "qwertymail.com",
+                          "msg": "Wrong email format, valid example: youremail@mailservice.com",
+                          "path": "email",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "qwerty",
+                          "msg": "Required length is 4 to 30. Use only [A-Z, a-z, 0-9, !?@#$%^&*~_]",
+                          "path": "password",
+                          "location": "body"
+                      }
+                  ]
+                }           
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "qwerty@mail.com",
+                          "msg": "Wrong login",
+                          "path": "login",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "",
+                          "msg": "Wrong password",
+                          "path": "password",
+                          "location": "body"
+                      }
+                  ]
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed to login"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Check User",
+        "description": "Authenticating request. Checks whether user is authenticated or not",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                "type": "object",
+                "example": {
+                  "_id": "12389ad79823f83c8187b",
+                  "msg": "Authorized",
+                  "userName": "qwerty",
+                  "email": "qwerty@mail.com"
+                }
+              }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "12389ad79823f83c8187b",
+                          "msg": "Invalid credentials",
+                          "path": "userId",
+                          "location": "user"
+                      }
+                  ]
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed to authenticate"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profile": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "User profile",
+        "description": "If successful, returns logged-in user data along with all bookmarks",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "object",
+                  "example": {
+                    "_id": "12389ad79823f83c8187b",
+                    "firstName": "firstname",
+                    "lastName": "lastname",
+                    "userName": "qwerty",
+                    "avatarUrl": "/avatars/default.png",
+                    "bookmarks": []
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed to load your profile data"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profile/edit": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "User profile edit",
+        "description": "If successful, returns logged-in user data and array of static files for editing mode",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "example": {
-                    "title": "Family Game Night at the Pool",
-                    "startDate": "2024-08-29T11:30Z",
-                    "endDate": "2024-08-29T13:00Z",
-                    "coordinates": [
-                      35.6546368,
-                      -78.3542594
-                    ],
-                    "address": "120 Flowers Pkwy, Clayton, NC 27527",
-                    "category": "social",
-                    "description": "Come with your family to the East Triangle YMCA for some fellowship and games!",
-                    "restrictions":"none",
-                    "hostName": "East Triangle YMCA",
-                    "eventUrl":"https://www.ymcatriangle.org/events/east-triangle-y-family-game-night-pool-0",
-                    "eventImages": [
-                      "https://www.ymcatriangle.org/sites/default/files/2024-06/uno.jpeg",
-                      "https://media.istockphoto.com/id/484794638/photo/volunteer-teacher-reading-to-a-class-of-preschool-kids.jpg?s=612x612&w=0&k=20&c=pq87RBcLRKYYjJmp0s-Y45263_LsCQpokQSakkw5kvQ="
+                    "_id": "66d6d3a18a112b",
+                    "firstName": "Ekaterina",
+                    "lastName": "Petrova",
+                    "userName": "KatyaP",
+                    "avatarUrl": "/avatars/face2.png",
+                    "avatarsList": [
+                        "/avatars/default.png",
+                        "/avatars/enlighten.png",
+                        "/avatars/face.png",
+                        "/avatars/face2.png",
+                        "/avatars/face3.png",
+                        "/avatars/deer.png",
+                        "/avatars/ganesha.png",
+                        "/avatars/koi.png",
+                        "/avatars/macaw.png",
+                        "/avatars/panda-bear.png",
+                        "/avatars/turtle.png",
+                        "/avatars/bear.png",
+                        "/avatars/kangaroo.png",
+                        "/avatars/sloth.png"
                     ]
-                  }
+                }
                 }
               }
             }
           },
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed to load profile data"
+                  }]
+                }
               }
             }
           }
         }
       },
-      "/api/v1/events/{eventId}": {
-        "get": {
-          "tags": [
-            "Events"
-          ],
-          "summary": "Get Event",
-          "description": "If successful, returns the event object with designated ID. Path parameter is required.",
-          "parameters":[
-            {
-              "name": "eventId",
-              "in": "path",
+      "put": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "User profile update",
+        "description": "If successful, updates user data in database. Requires valid password, validator rules are applied",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
               "schema": {
-                "type": "string"
-              },
-              "required":true,
-              "example":"66cabb40f08b594b3ee8f1dc"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
+                "type": "object",
+                "example": {
+                  "firstName": "Kate",
+                  "lastName": "Petrova",
+                  "userName": "Katya",
+                  "password": "*****",
+                  "avatarUrl":"/avatars/face2.png"
+                }
               }
             }
           }
         },
-        "put": {
-          "tags": [
-            "Events"
-          ],
-          "summary": "Update Event",
-          "description": "If successful, modifies the designated event. Path parameter is required.",
-          "parameters":[
-            {
-              "name": "eventId",
-              "in": "path",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": 
+                    [
+                      { 
+                        "msg": "Your profile was successfully updated!" 
+                      }
+                    ]
+                  
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "SimpleMan",
+                          "msg": "This username is already taken",
+                          "path": "userName",
+                          "location": "body"
+                        }
+                  ]   
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed updating profile"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Get All Events",
+        "description": "If successful, returns all the events from DB as an array of objects. Query parameters may apply.",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "food",
+            "description": "Defines the type of event: food, animal, environment, health, social"
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": "1",
+            "description": "Specifies the sorting order by date: '1' - chronological, '-1' - reversed"
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": "-1",
+            "description": "Specifies the sorting order by title: '1' - alphabetical, '-1' - reversed"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "_id": "66cabb40f08b594b3ee8f1dc",
+                      "title": "Catholic Parish Outreach Food Pantry",
+                      "startDate": "2024-08-26T02:00:00.000Z",
+                      "endDate": "2024-09-01T14:00:00.000Z",
+                      "address": "2013 Raleigh Blvd, Raleigh, NC 27604",
+                      "coordinates": [
+                          35.8089945,
+                          -78.6036917
+                      ],
+                      "description": "We are happy to help those struggling with food insecurity in our community!",
+                      "restrictions": "none",
+                      "hostName": "Catholic Parish Outreach Food Pantry",
+                      "createdAt": "2024-08-25T05:04:00.776Z",
+                      "updatedAt": "2024-08-25T21:55:24.686Z",
+                      "__v": 0,
+                      "category": "food",
+                      "eventUrl": "http://www.cporaleigh.org/",
+                      "eventImages": [
+                          "https://lh3.googleusercontent.com/d/1l7KWJSJZotiTyACchExih2NsOLsDngDw",
+                          "https://lh3.googleusercontent.com/d/1hPENquCTyq4Vi-k5HnFFbAMn7wOTRsdI",
+                          "https://lh3.googleusercontent.com/d/14Kz3B-aauqFmrYuXKxcUvmTPKAArGpu2",
+                          "https://lh3.googleusercontent.com/d/1mknVUCh5CXRP7owlulNpXehH3802aiVh"
+                      ]
+                    },
+                    {
+                      "_id": "66cbbba57ae7991b39021eca",
+                      "title": "Stream Cleanups",
+                      "startDate": "2024-09-28T04:00:00.000Z",
+                      "endDate": "2024-09-28T06:00:00.000Z",
+                      "address": "Apollo Heights Park, 756 Lunar Dr, Raleigh, NC 27610",
+                      "coordinates": [
+                          35.7648912,
+                          -78.6089343
+                      ],
+                      "description": "Help us clean and preserve Raleigh waterways by removing trash and other debris from our streams!",
+                      "restrictions": "none",
+                      "hostName": "City of Raleigh",
+                      "createdAt": "2024-08-25T23:17:57.069Z",
+                      "updatedAt": "2024-08-25T23:17:57.069Z",
+                      "__v": 0,
+                      "category": "environment",
+                      "eventUrl": "https://raleighnc.gov/",
+                      "eventImages": [
+                          "https://lh3.googleusercontent.com/d/1xcXpc75oVZmipORCkXgpfjhlfI_hK5dB",
+                          "https://lh3.googleusercontent.com/d/1-43w5a3nnvhrGhuozwVqnBYHt4T_nM3e",
+                          "https://lh3.googleusercontent.com/d/1xy3EVkJ2_13WV9X3Y-uF48jS0skSPAn1",
+                          "https://lh3.googleusercontent.com/d/1RyoU-azJ1OT2PsjbnaX8k9xUbXOVGmzl"
+                      ]
+                  }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed retrieving events"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Create Event",
+        "description": "Event creation request. If passes the validator, creates an event in database. For authenticated users with Admin rights only. Non-required attributes: endDate, restrictions, eventImages",
+        "requestBody": {
+          "content": {
+            "application/json": {
               "schema": {
-                "type": "string"
-              },
-              "required":true,
-              "example":"66cabb40f08b594b3ee8f1dc"
+                "type": "object",
+                "example": {
+                  "title": "Family Game Night at the Pool",
+                  "startDate": "2024-08-29T11:30Z",
+                  "endDate": "2024-08-29T13:00Z",
+                  "coordinates": [
+                    35.6546368,
+                    -78.3542594
+                  ],
+                  "address": "120 Flowers Pkwy, Clayton, NC 27527",
+                  "category": "social",
+                  "description": "Come with your family to the East Triangle YMCA for some fellowship and games!",
+                  "restrictions":"none",
+                  "hostName": "East Triangle YMCA",
+                  "eventUrl":"https://www.ymcatriangle.org/events/east-triangle-y-family-game-night-pool-0",
+                  "eventImages": [
+                    "https://www.ymcatriangle.org/sites/default/files/2024-06/uno.jpeg",
+                    "https://media.istockphoto.com/id/484794638/photo/volunteer-teacher-reading-to-a-class-of-preschool-kids.jpg?s=612x612&w=0&k=20&c=pq87RBcLRKYYjJmp0s-Y45263_LsCQpokQSakkw5kvQ="
+                  ]
+                }
+              }
             }
-          ],
-          "security": [
-            {
-              "bearerAuth": []
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                "type": "object",
+                "example": {
+                  "title": "Family Game Night at the Pool",
+                  "startDate": "2024-08-29T11:30Z",
+                  "endDate": "2024-08-29T13:00Z",
+                  "coordinates": [
+                    35.6546368,
+                    -78.3542594
+                  ],
+                  "address": "120 Flowers Pkwy, Clayton, NC 27527",
+                  "category": "social",
+                  "description": "Come with your family to the East Triangle YMCA for some fellowship and games!",
+                  "restrictions":"none",
+                  "hostName": "East Triangle YMCA",
+                  "eventUrl":"https://www.ymcatriangle.org/events/east-triangle-y-family-game-night-pool-0",
+                  "eventImages": [
+                    "https://www.ymcatriangle.org/sites/default/files/2024-06/uno.jpeg",
+                    "https://media.istockphoto.com/id/484794638/photo/volunteer-teacher-reading-to-a-class-of-preschool-kids.jpg?s=612x612&w=0&k=20&c=pq87RBcLRKYYjJmp0s-Y45263_LsCQpokQSakkw5kvQ="
+                  ]
+                }
+              }
+              }
             }
-          ],
-          "requestBody": {
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "some-title",
+                          "msg": "Minimum length is 10, maximum - 100",
+                          "path": "title",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": 11122024,
+                          "msg": "Any valid Date format required",
+                          "path": "startDate",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": 11122024,
+                          "msg": "Any valid Date format required",
+                          "path": "endDate",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "",
+                          "msg": "Provide valid Event's address",
+                          "path": "address",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": [-75.23131],
+                          "msg": "An array of [lat, lng] is required",
+                          "path": "coordinates",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "foood",
+                          "msg": "Valid category type is required",
+                          "path": "category",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "[-75.23131]",
+                          "msg": "Description should be not less than 20 characters",
+                          "path": "description",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": 123,
+                          "msg": "Provide valid restrictions",
+                          "path": "restrictions",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": [-123],
+                          "msg": "Provide valid host name",
+                          "path": "hostName",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "string-but-not-url",
+                          "msg": "Event's URL is required",
+                          "path": "eventUrl",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": ["qwe","rty"],
+                          "msg": "Valid Image Links are required, multiple values allowed",
+                          "path": "eventImages",
+                          "location": "body"
+                      }
+
+                  ]
+                }           
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "not-unique-title",
+                          "msg": "This title is already registered",
+                          "path": "title",
+                          "location": "body"
+                        }
+                  ]   
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed to create event"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/{eventId}": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Get Event",
+        "description": "If successful, returns the event object with designated ID. Path parameter is required.",
+        "parameters":[
+          {
+            "name": "eventId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required":true,
+            "example":"66cabb40f08b594b3ee8f1dc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                "type": "object",
+                "example": {
+                  "_id": "66cabb40f08b594b3ee8f1dc",
+                  "title": "Family Game Night at the Pool",
+                  "startDate": "2024-08-29T11:30Z",
+                  "endDate": "2024-08-29T13:00Z",
+                  "coordinates": [
+                    35.6546368,
+                    -78.3542594
+                  ],
+                  "address": "120 Flowers Pkwy, Clayton, NC 27527",
+                  "category": "social",
+                  "description": "Come with your family to the East Triangle YMCA for some fellowship and games!",
+                  "restrictions":"none",
+                  "hostName": "East Triangle YMCA",
+                  "eventUrl":"https://www.ymcatriangle.org/events/east-triangle-y-family-game-night-pool-0",
+                  "eventImages": [
+                    "https://www.ymcatriangle.org/sites/default/files/2024-06/uno.jpeg",
+                    "https://media.istockphoto.com/id/484794638/photo/volunteer-teacher-reading-to-a-class-of-preschool-kids.jpg?s=612x612&w=0&k=20&c=pq87RBcLRKYYjJmp0s-Y45263_LsCQpokQSakkw5kvQ="
+                  ]
+                }
+              }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": 
+                  [{ 
+                    "type": "field",
+                    "value": "${eventId}",
+                    "msg": "Event not found!",
+                    "path": "id",
+                    "location": "params" 
+                }]
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed retrieving event"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Update Event",
+        "description": "If successful, modifies the designated event, path parameter is required. For authenticated users with Admin rights only",
+        "parameters":[
+          {
+            "name": "eventId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required":true,
+            "example":"66cabb40f08b594b3ee8f1dc"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "title": "Feed'em All!",
+                  "startDate":"2024-08-29T11:30Z",
+                  "restrictions":"No pets, no alcohol"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": { "msg": "Event is successfully updated!" }
+                } 
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "some-title",
+                          "msg": "Minimum length is 10, maximum - 100",
+                          "path": "title",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": 11122024,
+                          "msg": "Any valid Date format required",
+                          "path": "startDate",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": 11122024,
+                          "msg": "Any valid Date format required",
+                          "path": "endDate",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "",
+                          "msg": "Provide valid Event's address",
+                          "path": "address",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": [-75.23131],
+                          "msg": "An array of [lat, lng] is required",
+                          "path": "coordinates",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "foood",
+                          "msg": "Valid category type is required",
+                          "path": "category",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "[-75.23131]",
+                          "msg": "Description should be not less than 20 characters",
+                          "path": "description",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": 123,
+                          "msg": "Provide valid restrictions",
+                          "path": "restrictions",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": [-123],
+                          "msg": "Provide valid host name",
+                          "path": "hostName",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": "string-but-not-url",
+                          "msg": "Event's URL is required",
+                          "path": "eventUrl",
+                          "location": "body"
+                      },
+                      {
+                          "type": "field",
+                          "value": ["qwe","rty"],
+                          "msg": "Valid Image Links are required, multiple values allowed",
+                          "path": "eventImages",
+                          "location": "body"
+                      }
+
+                  ]
+                }           
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [
+                        {
+                          "type": "field",
+                          "value": "not-unique-title",
+                          "msg": "This title is already registered",
+                          "path": "title",
+                          "location": "body"
+                        }
+                  ]   
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed to update event"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Delete Event",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "If successful, deletes the designated event. Path parameter is required.",
+        "parameters":[
+          {
+            "name": "eventId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required":true,
+            "example":"66cabb40f08b594b3ee8f1dc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": { "msg": "Successfully deleted" }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": 
+                  [{ 
+                    "type": "field",
+                    "value": "${eventId}",
+                    "msg": "Event not found!",
+                    "path": "id",
+                    "location": "params" 
+                }]
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{
+                    "msg": "Failed to delete event"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bookmarks": {
+      "get": {
+        "tags": [
+          "Bookmarks"
+        ], 
+        "description": "If successful, returns an array of user-related bookmarks. Authentication is required",
+        "summary": "Get All Bookmarks",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "example": [
+                    {
+                        "_id": "66d8f49d5b6a9e504618cbde",
+                        "user": "66d6d3a18a1ecd5aecc4712b",
+                        "event": {
+                            "_id": "66cbaaa5c3e2e2a9c6730df5",
+                            "title": "Wake County Animal Center",
+                            "startDate": "2024-08-01T02:00:00.000Z",
+                            "endDate": "2024-10-01T14:00:00.000Z",
+                            "address": "820 Beacon Lake Dr, Raleigh, NC 27610",
+                            "coordinates": [
+                                35.7919433,
+                                -78.5719131
+                            ],
+                            "description": "Here you will find a true friend!",
+                            "restrictions": "none",
+                            "hostName": "Wake County Animal Center",
+                            "createdAt": "2024-08-25T22:05:25.588Z",
+                            "updatedAt": "2024-08-25T22:05:25.588Z",
+                            "__v": 0,
+                            "category": "animal",
+                            "eventUrl": "http://www.wakegov.com/pets",
+                            "eventImages": [
+                                "https://lh3.googleusercontent.com/d/1nGHR5Ep6KW7w5UHmChVS5cfJfSg1b6MZ",
+                                "https://lh3.googleusercontent.com/d/1jvntR7sTEA49fjqjHOw9-EXJyyJ45qfL",
+                                "https://lh3.googleusercontent.com/d/1OjwVr3OmBc5LXk6Kn7UOdDTZrkl0kI8e",
+                                "https://lh3.googleusercontent.com/d/1C00rA3pdDx7Sh7BiCd2EhLAFKX9P-FZb"
+                            ]
+                        },
+                        "createdAt": "2024-09-05T00:00:29.313Z",
+                        "__v": 0
+                    },
+                    {
+                        "_id": "66d8fdf45b6a9e504618cc89",
+                        "user": "66d6d3a18a1ecd5aecc4712b",
+                        "event": {
+                            "_id": "66cbc33e7ae7991b39021ed8",
+                            "title": "Supporting Newcomers",
+                            "startDate": "2024-09-01T02:00:00.000Z",
+                            "endDate": "2024-12-31T12:00:00.000Z",
+                            "address": "6903 Carpenter Fire Station Rd, Cary, NC 27519",
+                            "coordinates": [
+                                35.8233335,
+                                -78.9155917
+                            ],
+                            "description": "Embracing newcomer immigrants and their contributions to the social fabric of our country",
+                            "restrictions": "none",
+                            "hostName": "Northwest Cary YMCA",
+                            "createdAt": "2024-08-25T23:50:22.960Z",
+                            "updatedAt": "2024-08-25T23:50:22.960Z",
+                            "__v": 0,
+                            "category": "social",
+                            "eventUrl": "https://www.ymcatriangle.org/locations/northwest-cary-ymca",
+                            "eventImages": [
+                                "https://lh3.googleusercontent.com/d/1SduCCQl0JI0GwAmdhsqar5YPsdAXQeqP",
+                                "https://lh3.googleusercontent.com/d/1MvVjbDip4zJR0R3JqBcebhzEdAJ8Drch",
+                                "https://lh3.googleusercontent.com/d/1M3-wyYFveQWpEVomy8WoPfOG9zv7g3J5",
+                                "https://lh3.googleusercontent.com/d/1NBDCV-u83KG9d7xNaU7U_XzSJvylWQlX"
+                            ]
+                        },
+                        "createdAt": "2024-09-05T00:40:20.161Z",
+                        "__v": 0
+                    },
+                    {
+                        "_id": "66d8fe015b6a9e504618cc8b",
+                        "user": "66d6d3a18a1ecd5aecc4712b",
+                        "event": {
+                            "_id": "66cbc1307ae7991b39021ed4",
+                            "title": "Disaster Recovery Client Care",
+                            "startDate": "2024-09-01T02:00:00.000Z",
+                            "endDate": "2024-12-01T12:00:00.000Z",
+                            "address": "100 N Peartree Ln, Raleigh, NC 27610",
+                            "coordinates": [
+                                35.7843954,
+                                -78.5923502
+                            ],
+                            "description": "Program supports the recovery of disaster affected individuals, households, and communities",
+                            "restrictions": "none",
+                            "hostName": "American Red Cross",
+                            "createdAt": "2024-08-25T23:41:36.703Z",
+                            "updatedAt": "2024-08-25T23:41:36.703Z",
+                            "__v": 0,
+                            "category": "health",
+                            "eventUrl": "https://www.redcross.org/",
+                            "eventImages": [
+                                "https://lh3.googleusercontent.com/d/1sW5tJ5gO-sVyqXHRrNhYfJN3ir54FF07",
+                                "https://lh3.googleusercontent.com/d/1b3ATWBH50TB-HgIA9WULNRJBgR9rNjoy",
+                                "https://lh3.googleusercontent.com/d/1QBHfrXMwKco4vHVvHTTBeP3U6prPnn4h",
+                                "https://lh3.googleusercontent.com/d/11z-19wjzgZdmbiIXnbKKklVvyBJ6dBzR"
+                            ]
+                        },
+                        "createdAt": "2024-09-05T00:40:33.891Z",
+                        "__v": 0
+                    }
+                ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{ "msg": "Failed to fetch bookmarks" }]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Bookmarks"
+        ],
+        "summary": "Create Bookmark",
+        "description": "If successful, creates a user-related bookmark. Authentication is required",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "event": "66cbc1307ae7991b39021ed4"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "example": {
-                    "title": "Feed'em All!",
-                    "startDate":"2024-08-29T11:30Z",
-                    "restrictions":"No pets, no alcohol"
-                  }
+                    "user": "66d6d3a18a1ecd5aecc4712b",
+                    "event": "66cbc1307ae7991b39021ed4",
+                    "_id": "66db3700be42d73f7863b657",
+                    "createdAt": "2024-09-06T17:08:16.396Z",
+                    "__v": 0
                 }
+                } 
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": 
+                  [{ 
+                    "type": "field",
+                    "value": "66cbc1307ae7991b39021ed4",
+                    "msg": "Event not found!",
+                    "path": "eventId",
+                    "location": "body" 
+                }]
+                }           
               }
             }
-          }
-        },
-        "delete": {
-          "tags": [
-            "Events"
-          ],
-          "summary": "Delete Event",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "description": "If successful, deletes the designated event. Path parameter is required.",
-          "parameters":[
-            {
-              "name": "eventId",
-              "in": "path",
-              "schema": {
-                "type": "string"
-              },
-              "required":true,
-              "example":"66cabb40f08b594b3ee8f1dc"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{ "msg": "Failed to create bookmark" }]
+                }
               }
             }
           }
         }
-      },
-      "/api/v1/bookmarks": {
-        "get": {
-          "tags": [
-            "Bookmarks"
-          ], 
-          "description": "If successful, returns an array of user-related bookmarks. Authentication is required",
-          "summary": "Get All Bookmarks",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
-              }
-            }
+      }
+    },
+    "/api/v1/bookmarks/{bookmarkId}": {
+      "get": {
+        "tags": [
+          "Bookmarks"
+        ],
+        "summary": "Get Bookmark",
+        "description": "If successful, returns the user-related bookmark with designated ID. Authentication and path parameter are required",
+        "parameters":[
+          {
+            "name": "bookmarkId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required":true,
+            "example":"66cabb40f08b594b3ee8f1dc"
           }
-        },
-        "post": {
-          "tags": [
-            "Bookmarks"
-          ],
-          "summary": "Create Bookmark",
-          "description": "If successful, creates a user-related bookmark. Authentication is required",
-          "requestBody": {
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "example": {
-                    "event": "66caa90b77a797377a87948a"
+                    "_id": "66d8f49d5b6a9e504618cbde",
+                    "user": "66d6d3a18a1ecd5aecc4712b",
+                    "event": {
+                        "_id": "66cbaaa5c3e2e2a9c6730df5",
+                        "title": "Wake County Animal Center",
+                        "startDate": "2024-08-01T02:00:00.000Z",
+                        "endDate": "2024-10-01T14:00:00.000Z",
+                        "address": "820 Beacon Lake Dr, Raleigh, NC 27610",
+                        "coordinates": [
+                            35.7919433,
+                            -78.5719131
+                        ],
+                        "description": "Here you will find a true friend!",
+                        "restrictions": "none",
+                        "hostName": "Wake County Animal Center",
+                        "createdAt": "2024-08-25T22:05:25.588Z",
+                        "updatedAt": "2024-08-25T22:05:25.588Z",
+                        "__v": 0,
+                        "category": "animal",
+                        "eventUrl": "http://www.wakegov.com/pets",
+                        "eventImages": [
+                            "https://lh3.googleusercontent.com/d/1nGHR5Ep6KW7w5UHmChVS5cfJfSg1b6MZ",
+                            "https://lh3.googleusercontent.com/d/1jvntR7sTEA49fjqjHOw9-EXJyyJ45qfL",
+                            "https://lh3.googleusercontent.com/d/1OjwVr3OmBc5LXk6Kn7UOdDTZrkl0kI8e",
+                            "https://lh3.googleusercontent.com/d/1C00rA3pdDx7Sh7BiCd2EhLAFKX9P-FZb"
+                        ]
+                    },
+                    "createdAt": "2024-09-05T00:00:29.313Z",
+                    "__v": 0
+                }
+                } 
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": 
+                  [{ 
+                    "type": "field",
+                    "value": "66cbc1307ae7991b39021ed4",
+                    "msg": "Bookmark not found!",
+                    "path": "bookmarkId",
+                    "location": "body" 
+                }]
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{ "msg": "Failed to fetch bookmark"  }]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Bookmarks"
+        ],
+        "summary": "Delete Bookmark",
+        "description": "If successful, deletes the user-related bookmark with designated ID. Authentication and path parameter are required",
+        "parameters":[
+          {
+            "name": "bookmarkId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required":true,
+            "example":"66cabb40f08b594b3ee8f1dc"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example":  {
+                    "msg": "Bookmark deleted successfully"
+                }
+                } 
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": 
+                  [{ 
+                    "type": "field",
+                    "value": "66cbc1307ae7991b39021ed4",
+                    "msg": "Bookmark not found!",
+                    "path": "bookmarkId",
+                    "location": "body" 
+                }]
+                }           
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{ "msg": "Failed to delete bookmark"  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search": {
+      "get": {
+        "tags": [
+          "Search (GEO)"
+        ],
+        "summary": "GEO Search",
+        "description": "Request to interact with Google Map API, provides GEO data. Use either lat/lng pair or address. Address can be accompanied with 'details' parameter. Multiple status 200 outcomes",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "schema": {
+              "type": "double"
+            },
+            "example": "35.9042302",
+            "description": "Latitude parameter. Must be accompanied with longitude. If successful, returns the address of designated spot"
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "schema": {
+              "type": "double"
+            },
+            "example": "-78.65600669999999",
+            "description": "Longitude parameter. Must be accompanied with latitude. If successful, returns the address of designated spot"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "9650 Strickland Rd #175, Raleigh, NC 27615",
+            "description": "Address parameter. Returns the coordinates of designated address. Can be accompanied by 'details' parameter for extra information"
+          },
+          {
+            "name": "details",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": "1",
+            "description": "Works only in pair with 'address' parameter. Provides with detailed information"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "address": "9650 Strickland Rd #175, Raleigh, NC 27615, USA"
+                    },
+                    {
+                      "coordinates": {
+                          "lat": 35.90384,
+                          "lng": -78.6564573
+                      }
+                    },
+                    {
+                      "placeInfo": {
+                          "address_components": [
+                              {
+                                  "long_name": "9650",
+                                  "short_name": "9650",
+                                  "types": [
+                                      "street_number"
+                                  ]
+                              },
+                              {
+                                  "long_name": "Strickland Road",
+                                  "short_name": "Strickland Rd",
+                                  "types": [
+                                      "route"
+                                  ]
+                              },
+                              {
+                                  "long_name": "North Raleigh",
+                                  "short_name": "North Raleigh",
+                                  "types": [
+                                      "neighborhood",
+                                      "political"
+                                  ]
+                              },
+                              {
+                                  "long_name": "Raleigh",
+                                  "short_name": "Raleigh",
+                                  "types": [
+                                      "locality",
+                                      "political"
+                                  ]
+                              },
+                              {
+                                  "long_name": "Wake County",
+                                  "short_name": "Wake County",
+                                  "types": [
+                                      "administrative_area_level_2",
+                                      "political"
+                                  ]
+                              },
+                              {
+                                  "long_name": "North Carolina",
+                                  "short_name": "NC",
+                                  "types": [
+                                      "administrative_area_level_1",
+                                      "political"
+                                  ]
+                              },
+                              {
+                                  "long_name": "United States",
+                                  "short_name": "US",
+                                  "types": [
+                                      "country",
+                                      "political"
+                                  ]
+                              },
+                              {
+                                  "long_name": "27615",
+                                  "short_name": "27615",
+                                  "types": [
+                                      "postal_code"
+                                  ]
+                              }
+                          ],
+                          "formatted_address": "9650 Strickland Rd, Raleigh, NC 27615, USA",
+                          "geometry": {
+                              "bounds": {
+                                  "northeast": {
+                                      "lat": 35.9048977,
+                                      "lng": -78.6549976
+                                  },
+                                  "southwest": {
+                                      "lat": 35.9026226,
+                                      "lng": -78.6571954
+                                  }
+                              },
+                              "location": {
+                                  "lat": 35.90384,
+                                  "lng": -78.6564573
+                              },
+                              "location_type": "ROOFTOP",
+                              "viewport": {
+                                  "northeast": {
+                                      "lat": 35.9051091302915,
+                                      "lng": -78.65474751970851
+                                  },
+                                  "southwest": {
+                                      "lat": 35.9024111697085,
+                                      "lng": -78.65744548029151
+                                  }
+                              }
+                          },
+                          "place_id": "ChIJpbYI_f1XrIkR35deFsRkNco",
+                          "types": [
+                              "premise"
+                          ]
+                      }
                   }
+
+                  ]
                 }
               }
             }
           },
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": 
+                  [
+                    { "msg": "Invalid query parameters" } 
+                ]
+                }           
               }
             }
-          }
-        }
-      },
-      "/api/v1/bookmarks/{bookmarkId}": {
-        "get": {
-          "tags": [
-            "Bookmarks"
-          ],
-          "summary": "Get Bookmark",
-          "description": "If successful, returns the user-related bookmark with designated ID. Authentication and path parameter are required",
-          "parameters":[
-            {
-              "name": "bookmarkId",
-              "in": "path",
-              "schema": {
-                "type": "string"
-              },
-              "required":true,
-              "example":"66cabb40f08b594b3ee8f1dc"
-            }
-          ],
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
-              }
-            }
-          }
-        },
-        "delete": {
-          "tags": [
-            "Bookmarks"
-          ],
-          "summary": "Delete Bookmark",
-          "description": "If successful, deletes the user-related bookmark with designated ID. Authentication and path parameter are required",
-          "parameters":[
-            {
-              "name": "bookmarkId",
-              "in": "path",
-              "schema": {
-                "type": "string"
-              },
-              "required":true,
-              "example":"66cabb40f08b594b3ee8f1dc"
-            }
-          ],
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
-              }
-            }
-          }
-        }
-      },
-      "/api/v1/search": {
-        "get": {
-          "tags": [
-            "Search (GEO)"
-          ],
-          "summary": "GEO Search",
-          "description": "Request to interact with Google Map API, provides GEO data. Use either lat/lng pair or address. Address can be accompanied with 'details' parameter",
-          "parameters": [
-            {
-              "name": "lat",
-              "in": "query",
-              "schema": {
-                "type": "double"
-              },
-              "example": "35.9042302",
-              "description": "Latitude parameter. Must be accompanied with longitude. If successful, returns the address of designated spot"
-            },
-            {
-              "name": "lng",
-              "in": "query",
-              "schema": {
-                "type": "double"
-              },
-              "example": "-78.65600669999999",
-              "description": "Longitude parameter. Must be accompanied with latitude. If successful, returns the address of designated spot"
-            },
-            {
-              "name": "address",
-              "in": "query",
-              "schema": {
-                "type": "string"
-              },
-              "example": "9650 Strickland Rd #175, Raleigh, NC 27615",
-              "description": "Address parameter. Returns the coordinates of designated address. Can be accompanied by 'details' parameter for extra information"
-            },
-            {
-              "name": "details",
-              "in": "query",
-              "schema": {
-                "type": "integer"
-              },
-              "example": "1",
-              "description": "Works only in pair with 'address' parameter. Provides with detailed information"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {}
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                  "schema": {
+                  "type": "array",
+                  "example": [{ "msg": "Failed to fetch GEO data"  }]
+                }
               }
             }
           }
@@ -491,3 +1710,4 @@
       }
     }
   }
+}
