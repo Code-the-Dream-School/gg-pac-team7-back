@@ -3,6 +3,7 @@ const { StatusCodes } = require('http-status-codes')
 
 const registerUser = async (req, res) => {
     try {
+        req.body.userName = req.body.email
         const user = await User.create({...req.body})
         return res.status(StatusCodes.CREATED).json({ msg: "New user was successfully registered" }) 
     } catch (error) {

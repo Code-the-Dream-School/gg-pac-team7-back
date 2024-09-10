@@ -41,7 +41,7 @@
           "Auth"
         ],
         "summary": "Register User",
-        "description": "Register new user request. All fields except 'username' are required",
+        "description": "Register new user request. All fields are required",
         "requestBody": {
           "content": {
             "application/json": {
@@ -50,7 +50,6 @@
                 "example": {
                   "firstName": "Kate",
                   "lastName": "Petrova",
-                  "userName": "KatyaP",
                   "email": "petrova95@mail.com",
                   "password": ""
                 }
@@ -105,13 +104,6 @@
                           "value": "er",
                           "msg": "Required length is 3 to 20. Use only [A-Z, a-z]",
                           "path": "lastName",
-                          "location": "body"
-                      },
-                      {
-                          "type": "field",
-                          "value": "ty",
-                          "msg": "Required length is 3 to 20. Use only [A-Z, a-z, 0-9]",
-                          "path": "userName",
                           "location": "body"
                       }
                   ]
