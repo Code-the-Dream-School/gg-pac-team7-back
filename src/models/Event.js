@@ -24,8 +24,8 @@ const EventSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ['food', 'animal', 'environment', 'health', 'social'],
-        default:'social',
+        enum: ['Clean-up', 'Greening', 'Wildlife'],
+        default:'Clean-up',
         required: true
     },  
     description: {
@@ -38,11 +38,9 @@ const EventSchema = new mongoose.Schema({
     },
     hostName: {
         type: String,
-        required: true
     },
     eventUrl: {
-        type: String,
-        required: true
+        type: String
     },
     eventImages: {
         type: [String]
